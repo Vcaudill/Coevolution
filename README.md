@@ -38,7 +38,7 @@ msprime generated file so that each SLiM simulation can be run on a test basis,
 Versions:
 
 Python Script:
-python 3.10.2 
+python 3.10.2
 pyslim 0.700
 tskit 0.4.1
 msprime 1.1.0
@@ -70,7 +70,7 @@ gridtext_0.1.5
 gridExtra_2.3      
 colorspace_2.1-0   
 viridis_0.6.4      
-viridisLite_0.4.2 
+viridisLite_0.4.2
 ggplot2_3.4.4 
 
 SLiM version 3.7
