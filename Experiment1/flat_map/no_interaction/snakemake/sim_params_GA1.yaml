@@ -1,0 +1,50 @@
+# normal (flat) map for simulations with no phenotype based interaction results
+# snake will survive by chance 
+
+"main_dr":
+  - "no_interaction"
+
+"sub_dr":
+  - "msprime"
+  - "csv"
+  - "slim_tree"
+  - "params"
+
+"n_mus":
+  - 1.0e-08
+  - 1.0e-09
+  - 1.0e-10
+  - 1.0e-11
+
+"s_mus":
+  - 1.0e-08
+  - 1.0e-09
+  - 1.0e-10
+  - 1.0e-11
+
+"n_es":
+  - 0.005
+  - 0.05
+  - 0.5
+  - 5.0
+
+"s_es":
+  - 0.005
+  - 0.05
+  - 0.5
+  - 5.0
+
+"sigma":
+  - 0.5
+
+"cost":
+  - 100
+
+"interaction_rate":
+  - 0.05
+
+"gen_end":
+  - 30000
+
+"grid_val":
+  - 5

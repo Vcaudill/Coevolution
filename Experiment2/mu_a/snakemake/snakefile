@@ -1,0 +1,79 @@
+"""
+Snakefile for running GA Experiment
+
+"""
+
+import sys, os, subprocess, glob, pathlib
+import numpy as np
+configfile: "mu_a_sim_params.yaml" 
+
+rng = np.random.default_rng(12345) ## this will help to set the seeds for the msprime and slim sims
+
+# ###############################################################################
+# GENERAL RULES & GLOBALS
+# ###############################################################################
+
+#files and folders
+cwd = os.getcwd()
+input_dir = "Coevolution"
+preprefix = "Experiment2/"
+prefix = preprefix + config["main_dr"][0]
+maindir = input_dir  + prefix
+out_csv = input_dir  + prefix + "/csv/"
+out_msprime = input_dir + prefix + "/msprime_out/"
+out_slim = input_dir + prefix + "/slimtree_out/"
+tag="mu_a"
+
+if not os.path.isdir(maindir):
+    os.mkdir(maindir)
+if not os.path.isdir(out_csv):
+    os.mkdir(out_csv)
+if not os.path.isdir(out_slim):
+    os.mkdir(out_slim)
+if not os.path.isdir(out_msprime):
+    os.mkdir(out_msprime)
+
+
+replics=4
+
+out = [] 
+## These are the output files that will be made
+
+#nested for loop throught the paramiters need to rotate thought the replicas first to keep the seeds the same 
+for k in range(replics):
+    for i in range(len(config["s_mus"])):
+        for j in range(len(config["n_mus"])):
+            out.append(f"{out_slim}{tag}_slim_trees_snake_mu_rate_{'{:.1e}'.format(config['s_mus'][i])}_newt_mu_rate_{'{:.1e}'.format(config['n_mus'][j])}_snake_mu_effect_sd_{config['s_es'][i]}_newt_mu_effect_sd_{config['n_es'][j]}_sigma_{config['sigma'][0]}_rep_{k}_late_{config['gen_end'][0]}")
+
+seeds = rng.integers(0,2**32, len(out))
+out = [out[i]+f"_ID_{seeds[i]}.trees" for i in range(len(out))]
+
+# --dry--run
+# Run full pipeline!
+rule all: 
+   input: out
+
+rule msprime:
+    #input: dont need infile
+    output: f"{out_msprime}{tag}_trees_su_{{s_mus}}_nu_{{n_mus}}_sue_{{s_es}}_nue_{{n_es}}_rep_{{rep}}_ID_{{seeds}}.init.trees"
+    #threads:20
+    shell: 
+        ("python Coevolution/MSprime_script/snake_newt_gv_sm.py {wildcards.s_mus} {wildcards.n_mus} " +
+        "{wildcards.s_es} {wildcards.n_es} {out_msprime} {tag} {wildcards.rep} {wildcards.seeds}")
+
+
+rule slim:
+    input: msp_ts=f"{out_msprime}{tag}_trees_su_{{s_mus}}_nu_{{n_mus}}_sue_{{s_es}}_nue_{{n_es}}_rep_{{rep}}_ID_{{seeds}}.init.trees"
+    output: f"{out_slim}{tag}_slim_trees_snake_mu_rate_{{s_mus}}_newt_mu_rate_{{n_mus}}_snake_mu_effect_sd_{{s_es}}_newt_mu_effect_sd_{{n_es}}_sigma_{{sigma}}_rep_{{rep}}_late_{{gen_end}}_ID_{{seeds}}.trees"
+    #threads:20
+    params: 
+        interaction_rate=config["interaction_rate"][0],
+        grid_val=config["grid_val"][0]
+    
+    shell:
+        ("slim -d snake_mu_rate='{wildcards.s_mus}' -d newt_mu_rate='{wildcards.n_mus}' " +
+        "-d snake_mu_effect_sd='{wildcards.s_es}' -d newt_mu_effect_sd='{wildcards.n_es}' "+
+        "-d msprime_file='\"{input}\"' -d treename='\"{out_slim}\"' -d tag='\"{tag}\"' -d outpath='\"{out_csv}\"' "+
+        "-d rep='{wildcards.rep}' -d NUMGENS='{wildcards.gen_end}' -d interaction_rate='{params.interaction_rate}' "
+        "-d seed='{wildcards.seeds}' -d grid_val='{params.grid_val}' Coevolution/SLiM_script/cost_1on1_sm_final.slim")
+ 

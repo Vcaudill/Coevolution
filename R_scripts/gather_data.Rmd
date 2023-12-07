@@ -1,0 +1,1158 @@
+---
+title: "GatherData"
+output: html_document
+date: "2023-12-04"
+---
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE,echo = FALSE)
+```
+
+## This R Markdown
+
+This script is to gather data from all of the experiments into complete files
+make sure the pah is compete
+
+## Experiment 1 Flat map
+
+```{bash, data file gathering normal}
+#!/usr/bin/env bash
+
+# Run these comands while in The the folder that contains the file you would like to condense
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment1/
+foldername=flat_map/normal/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+\
+
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+
+
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+done
+
+```
+
+
+```{bash, data file gathering for no interaction}
+#!/usr/bin/env bash
+
+# Run these commands while in The the folder that contains the file you would like to condense
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment1/
+foldername=flat_map/no_interaction/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+
+```{bash, data file gathering for no heritablity}
+#!/usr/bin/env bash
+
+# Run these commands while in The the folder that contains the file you would like to condense
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment1/
+foldername=flat_map/no_hair/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+## Experiment 1 cost_grade
+
+```{bash, data file gathering both}
+#!/usr/bin/env bash
+
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment1/
+foldername=cost_grade/both/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+```{bash, data file gathering both no interaction}
+#!/usr/bin/env bash
+
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment1/
+foldername=cost_grade/both_no_interaction/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+```{bash, data file gathering newt_change}
+#!/usr/bin/env bash
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment1/
+foldername=cost_grade/newt_change/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+```{bash, data file gathering snake_change}
+#!/usr/bin/env bash
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment1/
+foldername=cost_grade/snake_change/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+
+```{bash, data file gathering interaction gradient}
+#!/usr/bin/env bash
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment1/
+foldername=interaction_grade/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+## Experiment 2 low to high mutational variance 
+
+```{bash, data file gathering mu_a}
+#!/usr/bin/env bash
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment2/
+foldername=mu_a/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+```{bash, data file gathering mu_b}
+#!/usr/bin/env bash
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment2/
+foldername=mu_b/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+```{bash, data file gathering mu_c}
+#!/usr/bin/env bash
+
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment2/
+foldername=mu_c/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+```{bash, data file gathering mu_d}
+#!/usr/bin/env bash
+
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment2/
+foldername=mu_d/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+
+## Experiment 3
+
+```{bash, data file gathering v_a}
+#!/usr/bin/env bash
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment3/
+foldername=v_a/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+```{bash, data file gathering v_b}
+#!/usr/bin/env bash
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment3/
+foldername=v_b/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+```{bash, data file gathering v_c}
+#!/usr/bin/env bash
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment3/
+foldername=v_c/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+```{bash, data file gathering v_d}
+#!/usr/bin/env bash
+
+# Requirements: need to have the same name and need to add additional columns
+thepath=Experiment3/
+foldername=v_d/csv
+thefolder=${thepath}${foldername}/*
+
+add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
+
+cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head=$(head -n 1 "${cor_head_file}")
+
+grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head=$(head -n 1 "${grid_head_file}")
+
+lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head=$(head -n 1 "${lit_head_file}")
+
+
+if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+then
+  echo "All cor, lit, and grid files exist!"
+  echo "This program will now end!"
+  exit 0
+fi
+
+#creating the files
+echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+
+for filename in $thefolder*.text;
+  do 
+#getting the variables 
+my_type=$(echo ${filename} |sed 's/.*GA205_//; s/_.*//')
+snake_mu_rate=$(echo ${filename} |sed 's/.*snake_mu_rate_//; s/_.*//')
+snake_mu_effect_sd=$(echo ${filename} |sed 's/.*snake_mu_effect_sd_//; s/_.*//')
+newt_mu_rate=$(echo ${filename} |sed 's/.*newt_mu_rate_//; s/_.*//')
+newt_mu_effect_sd=$(echo ${filename} |sed 's/.*newt_mu_effect_sd_//; s/_.*//')
+rep=$(echo ${filename} | sed "s/.*rep_//; s/_.*//")
+#echo ${newt_mu_rate}	
+# echo $my_type
+# echo $my_other_type
+# these new columns adding them to the data
+sed -i '' -e 's/$/,'${rep}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${snake_mu_effect_sd}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_rate}'/' $filename
+sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
+#infile >outfile
+if [[ $my_type == "lit" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+fi
+
+if [[ $my_type == "grid" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+fi
+
+if [[ $my_type == "cor" ]]
+then
+    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+fi
+
+done
+
+```
+
+
+
