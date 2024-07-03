@@ -52,7 +52,7 @@ cost_grade_grid$grid_num = 5
 ```{r, making newts and snakes in grid form look nice}
 
 
-main_grid_plot<- function(file_name, spegen, file, type, row_num, col_num){
+main_grid_plot<- function(file_name, spegen, file, selected_title, type, row_num, col_num, mymaxlimit){
   
 file$snake_newt_rep <- paste0(file$snake_mu_rate, "_", file$snake_mu_effect_sd,"_",file$newt_mu_rate, "_", file$newt_mu_effect_sd, "_", file$rep)
 
@@ -86,16 +86,16 @@ main_plot<-ggplot(data_long_type_comp, aes(x = x_loc, y = y_loc))+
                              unit = "cm")  ) # legend.position ="bottom"
 #plot.margin = unit(c(1, 1, 3, 1), "cm"),
 if(type != "num_ind"){
-  main_plot<- main_plot + labs(title = "Local Mean Phenotypes",
+  main_plot<- main_plot + labs(title = selected_title,
                                #subtitle = paste0("Simulation: ", file_name, ", Generation: ", spegen),
                                fill = "Toxicity/Resistance")+
-    scale_fill_viridis_c()
+    scale_fill_viridis_c(limits=c(0, mymaxlimit))
 }
 if(type == "num_ind"){
   main_plot<- main_plot + labs(title = paste0("Number of Individuals at Locations ", str_to_title(type)),
                                subtitle = paste0(file_name, ", Generation: ", spegen),
                                fill = "Newt/Snake PopSize")+
-    scale_fill_viridis_c(option = "plasma")
+    scale_fill_viridis_c(limits=c(0, mymaxlimit), option = "plasma")
 } 
 
 
@@ -117,12 +117,83 @@ file=cost_grade_grid
 file_name="1e-11_5_1e-10_0.5_0"
 spegen=44501
 type="mean"
+title = "Local Mean Phenotypes"
 row_num=20
 col_num=5
+mymaxlimit=50
 
-grid_example = main_grid_plot(file_name, spegen, file, type, row_num, col_num)
+grid_example = main_grid_plot(file_name, spegen, file, selected_title=title, type, row_num, col_num, mymaxlimit)
 
-ggsave("grid_example.png", plot=grid_example, height=7, width=5, units=c("in"), dpi=600)
+ggsave("grid_example.pdf", plot=grid_example, height=7, width=5, units=c("in"), dpi=600)
+
+
+file=cost_grade_grid
+file_name="1e-11_5_1e-10_0.5_0"
+spegen=44501
+type="min"
+title = "Local Min Phenotypes"
+row_num=20
+col_num=5
+mymaxlimit=50
+
+grid_min_example = main_grid_plot(file_name, spegen, file,selected_title=title, type, row_num, col_num, mymaxlimit)
+
+ggsave("grid_min_example.pdf", plot=grid_min_example, height=7, width=5, units=c("in"), dpi=600)
+
+
+file=cost_grade_grid
+file_name="1e-09_0.05_1e-11_5_1"
+spegen=44501
+type="min"
+title = "Local Min Phenotypes"
+row_num=20
+col_num=5
+mymaxlimit=40
+
+grid_min_example2 = main_grid_plot(file_name, spegen, file, selected_title=title, type, row_num, col_num, mymaxlimit)
+plot(grid_min_example2)
+ggsave("grid_min_example2-4.pdf", plot=grid_min_example2, height=7, width=5, units=c("in"), dpi=600)
+
+file=cost_grade_grid
+file_name="1e-11_5_1e-09_0.05_1"
+spegen=44501
+type="min"
+title = "Local Min Phenotypes"
+row_num=20
+col_num=5
+mymaxlimit=40
+
+grid_min_example42 = main_grid_plot(file_name, spegen, file, selected_title=title, type, row_num, col_num, mymaxlimit)
+plot(grid_min_example2)
+ggsave("grid_min_example4-2.pdf", plot=grid_min_example42, height=7, width=5, units=c("in"), dpi=600)
+
+
+file=cost_grade_grid
+file_name="1e-09_0.05_1e-11_5_1"
+spegen=44501
+type="mean"
+title = "Local Mean Phenotypes"
+row_num=20
+col_num=5
+mymaxlimit=40
+
+grid_mean_example2 = main_grid_plot(file_name, spegen, file, selected_title=title, type, row_num, col_num, mymaxlimit)
+plot(grid_mean_example2)
+ggsave("grid_mean_example2-4.pdf", plot=grid_mean_example2, height=7, width=5, units=c("in"), dpi=600)
+
+file=cost_grade_grid
+file_name="1e-11_5_1e-09_0.05_1"
+spegen=44501
+type="mean"
+title = "Local Mean Phenotypes"
+row_num=20
+col_num=5
+mymaxlimit=40
+
+grid_mean_example2 = main_grid_plot(file_name, spegen, file, selected_title=title, type, row_num, col_num, mymaxlimit)
+plot(grid_mean_example2)
+ggsave("grid_mean_example4-2.pdf", plot=grid_mean_example2, height=7, width=5, units=c("in"), dpi=600)
+
 
 ```
 
@@ -171,7 +242,7 @@ newt_change_cor$exp="Newt Heterogeneous Cost Map"
 
 
 
-boxplot_cors_by_gen_col_rep <- function(file1, file2, file3, title, subt, x_label, y_label, min_gen, max_gen){
+boxplot_cors_by_gen_col_rep <- function(file1, file2, file3, title, x_label, y_label, min_gen, max_gen){
 
   real_snewt_cor = snewt
    file1$snake_newt <- paste0(file1$snake_mu_rate, "_", file1$snake_mu_effect_sd, "_", file1$newt_mu_rate, "_", file1$newt_mu_effect_sd)
@@ -190,7 +261,7 @@ file$cor_score <- ifelse(file$sim == "Sims", "False","True")
 file$exp = factor(file$exp, levels=c("Flat Map", "Heterogeneous Cost Map", "Interaction Gradent Map"))
 
   plot <-  ggplot(file[which(file$gen>=min_gen & file$gen<=max_gen),]) +
-  ggtitle(title, subtitle = paste0(subt, " From ", min_gen, "th generation to ", max_gen, "th generation"))+
+  ggtitle(title, subtitle = paste0("From ", min_gen, "th generation to ", max_gen, "th generation"))+
   xlab(x_label) + ylab(y_label)+
   geom_boxplot(aes(x=factor(sim, level=c('Sims', "F","G","H","J","K","L","N","O","P")), y=as.numeric(mean_newt_pheno_By_mean_snake_pheno), fill=factor(cor_score)))+
   theme(plot.title = element_text(size=5)) +
@@ -201,7 +272,7 @@ file$exp = factor(file$exp, levels=c("Flat Map", "Heterogeneous Cost Map", "Inte
   facet_wrap(~exp, ncol=1)+
   scale_fill_manual(values =c("darkolivegreen3", "cadetblue2"), labels=c('Low Mutational Variance', 'Coevolution'))+
     labs(fill = " ")+
-  theme_bw() +  theme(axis.text.x = element_text(angle = 45, hjust=1, size = 18),title =element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 20))
+  theme_bw() +  theme(axis.text.x = element_text(angle = 45, hjust=1, size = 16), axis.text.y = element_text(size = 16), title = element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 16))
   #theme(axis.text.x = element_text(angle = 45, hjust=1))
 
 
@@ -210,7 +281,7 @@ file$exp = factor(file$exp, levels=c("Flat Map", "Heterogeneous Cost Map", "Inte
 }
 
 
-boxplot_cors_by_gen_col_rep_other3 <- function(file1, file2, file3, title, subt, x_label, y_label, min_gen, max_gen){
+boxplot_cors_by_gen_col_rep_other3 <- function(file1, file2, file3, title, x_label, y_label, min_gen, max_gen){
   real_snewt_cor = snewt
    file1$snake_newt <- paste0(file1$snake_mu_rate, "_", file1$snake_mu_effect_sd, "_", file1$newt_mu_rate, "_", file1$newt_mu_effect_sd)
    file2$snake_newt <- paste0(file2$snake_mu_rate, "_", file2$snake_mu_effect_sd, "_", file2$newt_mu_rate, "_", file2$newt_mu_effect_sd)
@@ -228,7 +299,7 @@ file$cor_score <- ifelse(file$sim == "Sims", "False","True")
 file$exp = factor(file$exp, levels=c("Heterogeneous Cost Map No Interaction", "Snake Heterogeneous Cost Map", "Newt Heterogeneous Cost Map"))
 
   plot <-  ggplot(file[which(file$gen>=min_gen & file$gen<=max_gen),]) +
-  ggtitle(title, subtitle = paste0(subt, " From ", min_gen, "th generation to ", max_gen, "th generation"))+
+  ggtitle(title, subtitle = paste0("From ", min_gen, "th generation to ", max_gen, "th generation"))+
   xlab(x_label) + ylab(y_label)+
   geom_boxplot(aes(x=factor(sim, level=c('Sims', "F","G","H","J","K","L","N","O","P")), y=as.numeric(mean_newt_pheno_By_mean_snake_pheno), fill=factor(cor_score)))+
   theme(plot.title = element_text(size=5)) +
@@ -239,7 +310,45 @@ file$exp = factor(file$exp, levels=c("Heterogeneous Cost Map No Interaction", "S
   facet_wrap(~exp, ncol=1)+
   scale_fill_manual(values =c("darkolivegreen3", "cadetblue2"), labels=c('Low Mutational Variance', 'Coevolution'))+
     labs(fill = " ")+
-  theme_bw() +  theme(axis.text.x = element_text(angle = 45, hjust=1, size = 18),title =element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 20))
+  theme_bw() +  theme(axis.text.x = element_text(angle = 45, hjust=1, size = 16),axis.text.y = element_text(size = 16),title =element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 16))
+  #theme(axis.text.x = element_text(angle = 45, hjust=1))
+
+
+
+  return(plot)
+}
+
+cors_overtime_col_rep <- function(file1, file2, file3, title, x_label, y_label){
+
+  real_snewt_cor = snewt
+   file1$snake_newt <- paste0(file1$snake_mu_rate, "_", file1$snake_mu_effect_sd, "_", file1$newt_mu_rate, "_", file1$newt_mu_effect_sd)
+   file2$snake_newt <- paste0(file2$snake_mu_rate, "_", file2$snake_mu_effect_sd, "_", file2$newt_mu_rate, "_", file2$newt_mu_effect_sd)
+   file3$snake_newt <- paste0(file3$snake_mu_rate, "_", file3$snake_mu_effect_sd, "_", file3$newt_mu_rate, "_", file3$newt_mu_effect_sd)
+file <- rbind(file1, file2, file3)
+
+file$sim <- str_replace_all(file$sim, "[ABCDEIM]", 'Sims')
+#c("A"='Low Mu Var', "B"='Low Mu Var', "C"='Low Mu Var', "D"='Low Mu Var', "E"='Low Mu Var', "I"='Low Mu Var', "M"='Low Mu Var'))
+
+file$cor_score <- ifelse(file$sim == "Sims", "False","True")
+
+#file$cor_score <- ifelse(file$sim == "A" | file$sim == "B"| file$sim == "C" | file$sim == "D"| file$sim == "E"| file$sim == "I"| file$sim == "M", "False","True")
+
+#smallset = file[which(file$gen>=40000 & file$gen<=50000 & file$exp=="Cost Gradent Map" & file$cor_score=="True"),]
+file$exp = factor(file$exp, levels=c("Flat Map", "Heterogeneous Cost Map", "Interaction Gradent Map"))
+
+  plot <-  
+    ggplot(file[which(file$sim=="H"),]) +
+  ggtitle(title)+
+  xlab(x_label) + ylab(y_label)+
+  geom_point(aes(x=as.numeric(generation), y=as.numeric(mean_newt_pheno_By_mean_snake_pheno), color=factor(cor_score)))+
+  theme(plot.title = element_text(size=5)) +
+  #  level=c("1a's", "2a/2a", "2a/3a", "2a/4a", "3a/2a", "3a/3a", "3a/4a", "4a/2a", "4a/3a", "4a/4a")+
+  #xlim(-1.1, 1.1)+
+    geom_hline(yintercept=real_snewt_cor, linetype="dashed")+
+  facet_wrap(~exp, ncol=1)+
+  scale_color_manual(values =c("cadetblue2"), labels=c('Simulation 2a/4a'))+
+    labs(color = " ")+
+  theme_bw() +  theme(axis.text.x = element_text(angle = 45, hjust=1, size = 16),axis.text.y = element_text(size = 16),title =element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 16))
   #theme(axis.text.x = element_text(angle = 45, hjust=1))
 
 
@@ -255,7 +364,6 @@ file4 = cost_grade_no_interact_cor
 file5 = snake_change_cor
 file6 = newt_change_cor
 title = "Spatial Phenotype Correlation"
-subt = " "
 exp_labeles=c("Flat Map", "Heterogeneous Cost Map", "Interaction Gradent Map")
 x_label = "Newt/Snake Genetic Architecture"
 y_label = "Spatial Correlation"
@@ -263,13 +371,17 @@ min_gen = 40000
 max_gen = 50000
 
 
-boxplot_cors_by_gen_col_rep = boxplot_cors_by_gen_col_rep(file1, file2, file3, title, subt, x_label, y_label, min_gen, max_gen)
+boxplot_cors_by_gen_col_rep = boxplot_cors_by_gen_col_rep(file1, file2, file3, title, x_label, y_label, min_gen, max_gen)
 
-ggsave("three_correlation.png", plot=boxplot_cors_by_gen_col_rep, height=7, width=11, units=c("in"), dpi=600)
+ggsave("three_correlation.pdf", plot=boxplot_cors_by_gen_col_rep, height=8, width=11, units=c("in"), dpi=600)
 
-boxplot_cors_by_gen_col_rep_other3 = boxplot_cors_by_gen_col_rep_other3(file4, file5, file6, title, subt, x_label, y_label, min_gen, max_gen)
+boxplot_cors_by_gen_col_rep_other3 = boxplot_cors_by_gen_col_rep_other3(file4, file5, file6, title, x_label, y_label, min_gen, max_gen)
 
-ggsave("three_correlation_app.png", plot=boxplot_cors_by_gen_col_rep_other3, height=7, width=11, units=c("in"), dpi=600)
+ggsave("three_correlation_app.pdf", plot=boxplot_cors_by_gen_col_rep_other3, height=8, width=11, units=c("in"), dpi=600)
+
+
+cors_overtime_col_rep=cors_overtime_col_rep(file1, file2, file3, title="Spatial Phenotype Correlation Over Time", x_label="Time", y_label)
+ggsave("cor_over_time.pdf", plot=cors_overtime_col_rep, height=8, width=11, units=c("in"), dpi=600)
 
 ```
 
@@ -361,8 +473,9 @@ plot1 <-   ggplot(file) +
   #scale_alpha(guide = 'none')+
     #labs(fill = " ")+
   guides(fill=guide_legend(title="Newt GA"))+
-  theme_bw() +  theme(title =element_text(size=18, face='bold'), legend.text=element_text(size=18), strip.text.x = element_text(size = 18), aspect.ratio = 1)#axis.text.x = element_text(angle = 45, hjust=1, size = 14),
-
+  theme_bw() +  theme(title =element_text(size=18, face='bold'),
+                      axis.text.x = element_text(size = 16), axis.text.y = element_text(size = 16),
+                      legend.text=element_text(size=18), strip.text.x = element_text(size = 18), aspect.ratio = 1)#axis.text.x = element_text(angle = 45, hjust=1, size = 14),
 
   return(plot1)
 }
@@ -399,7 +512,9 @@ plot2 <-   ggplot(file) +
   #scale_alpha(guide = 'none')+
     #labs(fill = " ")+
   guides(fill=guide_legend(title="Snake GA"))+
-  theme_bw() +  theme(title =element_text(size=18, face='bold'), legend.text=element_text(size=18), strip.text.x = element_text(size = 18), aspect.ratio = 1) #axis.text.x = element_text(angle = 45, hjust=1, size = 14),
+  theme_bw() +  theme(title =element_text(size=18, face='bold'),
+                      axis.text.x = element_text(size = 16), axis.text.y = element_text(size = 16),
+                      legend.text=element_text(size=18), strip.text.x = element_text(size = 18), aspect.ratio = 1) #axis.text.x = element_text(angle = 45, hjust=1, size = 14),
 
 
   return(plot2)
@@ -434,7 +549,8 @@ file$newt_snake_pheno_avg= (file$newt_pheno_change+file$snake_pheno_change)/2
   scale_fill_manual(values =c("darkolivegreen1", "azure2", "darkorange3"), labels=c("No Interaction", "No Heritability", "Standard Simulation"))+
     scale_x_discrete(breaks=c("F","G","H", "J", "K", "L", "N", "O", "P"), labels=c("2a/2a", "2a/3a", "2a/4a", "3a/2a", "3a/3a", "3a/4a", "4a/2a", "4a/3a", "4a/4a")) + # label newt/snake
     labs(fill = " ")+
-  theme_bw() +  theme(title =element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 20)) #axis.text.x = element_text(angle = 45, hjust=1, size = 18),
+  theme_bw() +  theme(title =element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 20),
+                      axis.text.x = element_text(angle = 45, hjust=1, size = 16), axis.text.y = element_text(size = 16),) #axis.text.x = element_text( size = 18),
 
     #theme(axis.text.x = element_text(angle = 45, hjust=1, size = 8),title =element_text(size=8, face='bold'))
   
@@ -463,8 +579,7 @@ plot <- ggplot(file[ which(file$generation>=min_gen & file$generation<=max_gen &
     scale_color_manual(name = "Species",
 values = c( "Snake_mean_Pheno" = "steelblue", "Newt_mean_Pheno" = "darkred"),
 labels = c("Snake", "Newt"))+
-    theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust=1, size = 18),
-                      title =element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 20))
+    theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust=1, size = 16), axis.text.y = element_text(size = 16), title =element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 20))
   return(plot)
    
 }
@@ -568,7 +683,7 @@ coevo_begin_end_gen=1000
 coevo_endlength_gen=1000 # this is to take the average of the last ___ of generations
 close_percent = .98
 
-
+#Experiment2
 mu_a_lit<- read.csv("Experiment2/mu_a/csv/all_lit.txt" , header = TRUE)
 
 mu_a_lit$group_rep <- paste0(mu_a_lit$snake_mu_rate, "_", mu_a_lit$snake_mu_effect_sd,"_",mu_a_lit$newt_mu_rate, "_", mu_a_lit$newt_mu_effect_sd, "_", mu_a_lit$rep)
@@ -713,6 +828,151 @@ GA_stage$snake_gen_change = (GA_stage$S_end_gen - GA_stage$S_str_gen)
 ```
 
 
+```{r, looking at the realtionship between pop size and phenotype}
+
+
+whale_gen <- function(file, title, subt, x_label, y_label,min_gen, max_gen, letter){
+  #file$rep==rep
+  file$snake_GA<-paste0(file$snake_mu_rate, "_", file$snake_mu_effect_sd)
+  file$newt_GA<-paste0(file$newt_mu_rate, "_", file$newt_mu_effect_sd)
+  file$sim_snake_name = NA
+  file$sim_newt_name = NA
+  #file$sim == "A" | "B" | "C" | "D"
+  file[which(file$sim  == "A" | file$sim  == "B" | file$sim  == "C" | file$sim  == "D"), ]$sim_snake_name = paste0("1",letter)
+  file[which(file$sim  == "E" | file$sim  == "F" | file$sim  == "G" | file$sim  == "H"), ]$sim_snake_name = paste0("2",letter)
+  file[which(file$sim  == "I" | file$sim  == "J" | file$sim  == "K" | file$sim  == "L"), ]$sim_snake_name = paste0("3",letter)
+  file[which(file$sim  == "M" | file$sim  == "N" | file$sim  == "O" | file$sim  == "P"), ]$sim_snake_name =  paste0("4",letter)
+  
+  file[which(file$sim  == "A" | file$sim  == "E" | file$sim  == "I" | file$sim  == "M"), ]$sim_newt_name =  paste0("1",letter)
+  file[which(file$sim  == "B" | file$sim  == "F" | file$sim  == "J" | file$sim  == "N"), ]$sim_newt_name =  paste0("2",letter)
+  file[which(file$sim  == "C" | file$sim  == "G" | file$sim  == "K" | file$sim  == "O"), ]$sim_newt_name = paste0("3",letter)
+  file[which(file$sim  == "D" | file$sim  == "H" | file$sim  == "L" | file$sim  == "P"), ]$sim_newt_name =  paste0("4",letter)
+  file$sim_name = paste0("S:", file$sim_snake_name,"/N:", file$sim_newt_name)
+  
+  
+dif <- ggplot(file[ which(file$generation>=min_gen & file$generation<=max_gen),]) +
+  #xlim(0, 1000)+
+  ggtitle(title, subtitle = paste0(subt, " From ", min_gen, " gen to ", max_gen, " gen")) +
+  xlab(x_label) + ylab(y_label)+
+  geom_point(aes(x=as.numeric(Newt_pop_size), y=as.numeric(Snake_pop_size), color = dif, shape=factor(rep)))+
+  #paste0(snake_mu_rate, "_", snake_mu_effect_sd), shape = paste0(newt_mu_rate, "_", newt_mu_effect_sd), group=T)
+  theme(plot.title = element_text(size=5)) +
+  scale_colour_gradient2(high = "steelblue", mid = "beige", low = "darkred", name = "Phenotype Difference (S-N)")+
+  scale_shape_discrete(name="Simulation Rep")+
+  #labs(colour = color_label) +
+  facet_wrap(~fct_reorder(sim_name, sim))+
+  theme_bw() +  theme(axis.text.x = element_text(angle = 45, hjust=1, size = 8), 
+                      # strip.background = element_blank(), 
+                      # strip.text.x = element_blank(), 
+                      # panel.grid.major = element_blank(), 
+                      # panel.grid.minor = element_blank(),
+                      # panel.background = element_blank(), 
+                      axis.line = element_line(colour = "black"))
+
+return(dif)
+
+}
+
+min_gen=5000
+max_gen=10000
+letter="a"
+wg1 = whale_gen(GA1_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt="Experiment 1", y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+ggsave("Early_Popsize_vs_pheno.pdf", plot=wg1, height=10, width=10, units=c("in"), dpi=600)
+wg1
+
+min_gen=45000
+max_gen=50000
+wg2 = whale_gen(GA1_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt="Experiment 1", y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+ggsave("Late_Popsize_vs_pheno.pdf", plot=wg2, height=10, width=10, units=c("in"), dpi=600)
+wg2
+
+
+min_gen=5000
+max_gen=10000
+letter="b"
+whale_gen(mu_a_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt="Experiment 2", y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+min_gen=45000
+max_gen=50000
+whale_gen(mu_a_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt="Experiment 2", y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+
+my_cur_file = mu_b_lit
+min_gen=5000
+max_gen=10000
+letter="c"
+experiment_on ="Experiment 2"
+whale_gen(my_cur_file, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+min_gen=45000
+max_gen=50000
+whale_gen(mu_a_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+
+
+my_cur_file = mu_c_lit
+min_gen=5000
+max_gen=10000
+letter="d"
+experiment_on ="Experiment 2"
+whale_gen(my_cur_file, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+min_gen=45000
+max_gen=50000
+whale_gen(mu_a_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+
+
+my_cur_file = mu_d_lit
+min_gen=5000
+max_gen=10000
+letter="e"
+experiment_on ="Experiment 2"
+whale_gen(my_cur_file, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+min_gen=45000
+max_gen=50000
+whale_gen(mu_a_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+
+
+
+my_cur_file = v_a_lit
+min_gen=5000
+max_gen=10000
+letter="f"
+experiment_on ="Experiment 3"
+whale_gen(my_cur_file, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+min_gen=45000
+max_gen=50000
+whale_gen(mu_a_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+
+
+my_cur_file = v_b_lit
+min_gen=5000
+max_gen=10000
+letter="g"
+experiment_on ="Experiment 3"
+whale_gen(my_cur_file, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+min_gen=45000
+max_gen=50000
+whale_gen(mu_a_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+
+
+my_cur_file = v_c_lit
+min_gen=5000
+max_gen=10000
+letter="h"
+experiment_on ="Experiment 3"
+whale_gen(my_cur_file, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+min_gen=45000
+max_gen=50000
+whale_gen(mu_a_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+
+my_cur_file = v_d_lit
+min_gen=5000
+max_gen=10000
+letter="i"
+experiment_on ="Experiment 3"
+whale_gen(my_cur_file, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+min_gen=45000
+max_gen=50000
+whale_gen(mu_a_lit, title="Newt VS Snake Population Size Color=S-N Phenotype", subt=experiment_on, y_label="Snake Population Size", x_label="Newt Population Size", min_gen=min_gen, max_gen=max_gen, letter)
+```
+
+
 ## Plotting the speed of Coevolution (experiemnt2 and experiment 3)
 
 ```{r, plotting all of the changes}
@@ -740,9 +1000,9 @@ coevo_speed =
   scale_x_discrete(labels=c('low/low', 'low/high', 'high/low','high/high'))+
   theme_bw() +  #theme(axis.text.x = element_text(angle = 45, hjust=1, size = 8), 
                  #     title =element_text(size=8, face='bold'))+
-    theme(legend.position = "none")
+        theme(legend.position = "none", axis.text.x = element_text(size = 16),axis.text.y = element_text(size = 16),title =element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text = element_text(size=14))
 
-ggsave("coevo_speed.png", plot=coevo_speed, height=7, width=10, units=c("in"), dpi=600)
+ggsave("coevo_speed.pdf", plot=coevo_speed, height=7, width=10, units=c("in"), dpi=600)
 
 
 ```
@@ -786,7 +1046,7 @@ data_long <- tidyr::pivot_longer(data, c(Newt_mean_Pheno, Snake_mean_Pheno,dif))
 
 plot <-   
 ggplot(data_long) +
-  ggtitle(title, subtitle = paste0(subt, " gen low ", gen_l, " gen high ", gen_h))+
+  ggtitle(title, subtitle = paste0(subt," generation ", gen_l," to generation ", gen_h))+
   xlab(x_label) + ylab(y_label)+
   geom_boxplot(aes(x=as.factor(reorder(order, mv_dif)), y=as.numeric(value),fill=name), alpha=0.3)+
   #geom_boxplot(aes(x=as.factor(reorder(order, mv_dif)), y=as.numeric(Snake_mean_Pheno),fill=name),  alpha=0.3)+
@@ -795,11 +1055,13 @@ ggplot(data_long) +
     theme(plot.title = element_text(size=5)) +
   scale_alpha(guide = 'none')+
   #labs(fill = " ")+
-  theme_bw() +  theme(axis.text.x = element_text(angle = 45, hjust=1, size = 8), 
-                      title =element_text(size=8, face='bold'))
-
-
-
+    theme_bw() +  theme(axis.text.x = element_text(angle = 45, hjust=1))
+                      #, size = 16),
+                      #axis.text.y = element_text(size = 16),
+                      #title =element_text(size=18, face='bold'),
+                      #legend.text=element_text(size=16), 
+                      #strip.text.x = element_text(size = 16))
+# theme(axis.text.x = element_text(angle = 45, hjust=1, size = 16), axis.text.y = element_text(size = 16), title = element_text(size=18, face='bold'), legend.text=element_text(size=16), strip.text.x = element_text(size = 16))
 
   return(plot)
 }
@@ -837,7 +1099,7 @@ data_long <- tidyr::pivot_longer(data, c(Newt_pop_size, Snake_pop_size,dif))
 
 
 plot <-    ggplot(data_long) +
-  ggtitle(title, subtitle = paste0(subt, " gen low ", gen_l, " gen high ", gen_h))+
+  ggtitle(title, subtitle = paste0(subt, " generation ", gen_l," to generation ", gen_h))+
   xlab(x_label) + ylab(y_label)+
 geom_boxplot(aes(x=reorder(order, mv_dif), y=as.numeric(value),  fill=name), alpha=0.3)+
     theme(plot.title = element_text(size=5)) +
@@ -879,7 +1141,7 @@ data_long <- tidyr::pivot_longer(data, c(Newt_mean_Pheno, Snake_mean_Pheno,dif))
 
 plot <-   
   ggplot(data_long) +
-  ggtitle(title, subtitle = paste0(subt, " gen low ", gen_l, " gen high ", gen_h))+
+  ggtitle(title, subtitle = paste0(subt, " generation ", gen_l," to generation ", gen_h))+
   xlab(x_label) + ylab(y_label)+
 geom_boxplot(aes(x=reorder(order, mv_dif), y=as.numeric(value), fill=name), alpha=0.3)+
     theme(plot.title = element_text(size=5)) +
@@ -896,7 +1158,7 @@ gen_l=45000
 gen_h=50000
 lowest="1e-08_0.005"
 title="Phenotype Difference by Mutational Variance"
-subt="Experiment GA1_lit"
+subt="From"
 letter="a"
 x_label = "Snake GA - Newt GA"
 y_label = "Phenotype"
@@ -906,10 +1168,10 @@ y_label = "Population Size"
 ga1ps = boxplot_dif_in_phopulationsize(GA1_lit, title, subt, x_label, y_label,gen_l, gen_h,lowest, letter)
 
 pg1 = plot_grid(ga1pp, ga1ps, labels = c('A', 'B'), label_size = 12, nrow =2)
-ggsave("PD_PSD.png", plot=pg1, height=7, width=7, units=c("in"), dpi=600)
+ggsave("PD_PSD.pdf", plot=pg1, height=7, width=6, units=c("in"), dpi=600)
 
 title="Phenotype Difference by Mutational Variance" 
-subt="Experiment mu_a_lit"
+subt="Experiment 2b"
 letter="b"
 x_label = "Simulations"
 y_label = "Phenotype"
@@ -918,7 +1180,7 @@ mu_a = boxplot_dif_in_phenotype (mu_a_lit, title, subt, x_label, y_label,gen_l, 
 
 
 title="Phenotype Difference by Mutational Variance"
-subt="Experiment mu_b_lit"
+subt="Experiment 2c"
 letter="c"
 x_label = "Simulations" 
 y_label = "Phenotype"
@@ -927,7 +1189,7 @@ mu_b = boxplot_dif_in_phenotype (mu_b_lit, title, subt, x_label, y_label,gen_l, 
 
 
 title="Phenotype Difference by Mutational Variance"
-subt="Experiment mu_c_lit" 
+subt="Experiment 2d" 
 letter="d"
 x_label = "Simulations"
 y_label = "Phenotype"
@@ -936,7 +1198,7 @@ mu_c = boxplot_dif_in_phenotype (mu_c_lit, title, subt, x_label, y_label,gen_l, 
 
 
 title="Phenotype Difference by Mutational Variance"
-subt="Experiment mu_d_lit" 
+subt="Experiment 2e" 
 letter="e"
 x_label = "Simulations"
 y_label = "Phenotype"
@@ -945,32 +1207,32 @@ mu_d = boxplot_dif_in_phenotype (mu_d_lit, title, subt, x_label, y_label,gen_l, 
 
 
 pg1 = plot_grid(mu_a, mu_b, mu_c, mu_d, labels = c('A', 'B', "C", "D"), label_size = 12)
-ggsave("mus_app.png", plot=pg1, height=7, width=10, units=c("in"), dpi=600)
+ggsave("mus_app.pdf", plot=pg1, height=7, width=10, units=c("in"), dpi=600)
 
-title="Phenotype Difference by Mutational Variance" 
-subt="Experiment v_a_lit" 
+title="Phenotype Difference by Polygenicity" 
+subt="Experiment 3f" 
 letter="f"
 x_label = "Simulations" 
 y_label = "Phenotype"
 v_a = boxplot_dif_in_phenotype_less_log (v_a_lit, title, subt, x_label, y_label,gen_l, gen_h, letter)
 
 
-title="Phenotype Difference by Mutational Variance"
-subt="Experiment v_b_lit"
+title="Phenotype Difference by Polygenicity"
+subt="Experiment 3g"
 letter="g"
 x_label = "Simulations"
 y_label = "Phenotype"
 v_b = boxplot_dif_in_phenotype_less_log (v_b_lit, title, subt, x_label, y_label,gen_l, gen_h, letter)
 
-title="Phenotype Difference by Mutational Variance"
-subt="Experiment v_c_lit"
+title="Phenotype Difference by Polygenicity"
+subt="Experiment 3h"
 letter="h"
 x_label = "Simulations" 
 y_label = "Phenotype"
 v_c = boxplot_dif_in_phenotype_less_log (v_c_lit, title, subt, x_label, y_label,gen_l, gen_h, letter)
 
-title="Phenotype Difference by Mutational Variance"
-subt="Experiment v_d_lit" 
+title="Phenotype Difference by Polygenicity"
+subt="Experiment 3i" 
 letter="i"
 x_label = "Simulations"
 y_label = "Phenotype"
@@ -978,10 +1240,7 @@ v_d = boxplot_dif_in_phenotype_less_log (v_d_lit, title, subt, x_label, y_label,
 
 
 pg2 = plot_grid(v_a, v_b, v_c, v_d, labels = c('A', 'B', "C", "D"), label_size = 12)
-ggsave("vms_app.png", plot=pg2, height=7, width=10, units=c("in"), dpi=600)
+ggsave("vms_app.pdf", plot=pg2, height=7, width=10, units=c("in"), dpi=600)
 
 
 ```
-
-
-
