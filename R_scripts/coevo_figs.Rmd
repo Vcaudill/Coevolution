@@ -228,13 +228,13 @@ cost_grade_no_interact_cor$group <- paste0(cost_grade_no_interact_cor$snake_mu_r
 cost_grade_no_interact_cor$sim=LETTERS[factor(cost_grade_no_interact_cor$group)]
 cost_grade_no_interact_cor$exp="Heterogeneous Cost Map No Interaction"
 
-snake_change_cor<- read.csv("cost_grade/snake_change/all_cor.txt" , header = TRUE)
+snake_change_cor<- read.csv("cost_grade/snake_change/csv/all_cor.txt" , header = TRUE)
 snake_change_cor$group_rep <- paste0(snake_change_cor$snake_mu_rate, "_", snake_change_cor$snake_mu_effect_sd,"_",snake_change_cor$newt_mu_rate, "_", snake_change_cor$newt_mu_effect_sd, "_", snake_change_cor$rep)
 snake_change_cor$group <- paste0(snake_change_cor$snake_mu_rate, "_", snake_change_cor$snake_mu_effect_sd,"_",snake_change_cor$newt_mu_rate, "_", snake_change_cor$newt_mu_effect_sd)
 snake_change_cor$sim=LETTERS[factor(snake_change_cor$group)]
 snake_change_cor$exp="Snake Heterogeneous Cost Map"
 
-newt_change_cor<- read.csv("cost_grade/newt_change/all_cor.txt" , header = TRUE)
+newt_change_cor<- read.csv("cost_grade/newt_change/csv/all_cor.txt" , header = TRUE)
 newt_change_cor$group_rep <- paste0(newt_change_cor$snake_mu_rate, "_", newt_change_cor$snake_mu_effect_sd,"_",newt_change_cor$newt_mu_rate, "_", newt_change_cor$newt_mu_effect_sd, "_", newt_change_cor$rep)
 newt_change_cor$group <- paste0(newt_change_cor$snake_mu_rate, "_", newt_change_cor$snake_mu_effect_sd,"_",newt_change_cor$newt_mu_rate, "_", newt_change_cor$newt_mu_effect_sd)
 newt_change_cor$sim=LETTERS[factor(newt_change_cor$group)]
@@ -601,7 +601,7 @@ no_interaction_lit$sim=LETTERS[factor(no_interaction_lit$group)]
 no_interaction_lit$dif <- no_interaction_lit$Snake_mean_Pheno-no_interaction_lit$Newt_mean_Pheno
 no_interaction_lit$exp="No Interaction"
 
-no_hair_lit<- read.csv("flat_map/no_hair/all_lit.txt" , header = TRUE)
+no_hair_lit<- read.csv("flat_map/no_hair/csv/all_lit.txt" , header = TRUE)
 
 no_hair_lit$group_rep <- paste0(no_hair_lit$snake_mu_rate, "_", no_hair_lit$snake_mu_effect_sd,"_",no_hair_lit$newt_mu_rate, "_", no_hair_lit$newt_mu_effect_sd, "_", no_hair_lit$rep)
 
