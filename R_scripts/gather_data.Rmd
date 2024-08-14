@@ -12,33 +12,34 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,echo = FALSE)
 ## This R Markdown
 
 This script is to gather data from all of the experiments into complete files
-make sure the pah is compete
 
 ## Experiment 1 Flat map
+
 
 ```{bash, data file gathering normal}
 #!/usr/bin/env bash
 
-# Run these comands while in The the folder that contains the file you would like to condense
+# Run these commands while in The the folder that contains the file you would like to condense
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment1/
 foldername=flat_map/normal/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -46,9 +47,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 \
 
 
@@ -71,17 +72,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 done
 
@@ -92,24 +93,25 @@ done
 #!/usr/bin/env bash
 
 # Run these commands while in The the folder that contains the file you would like to condense
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment1/
 foldername=flat_map/no_interaction/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -117,9 +119,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 
 
@@ -144,17 +146,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -164,26 +166,26 @@ done
 
 ```{bash, data file gathering for no heritablity}
 #!/usr/bin/env bash
-
+dir=~/Desktop/Coevolution/
 # Run these commands while in The the folder that contains the file you would like to condense
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
 thepath=Experiment1/
 foldername=flat_map/no_hair/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -191,9 +193,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 
 
@@ -218,17 +220,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -241,24 +243,25 @@ done
 #!/usr/bin/env bash
 
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment1/
 foldername=cost_grade/both/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -266,9 +269,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -291,17 +294,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -312,23 +315,24 @@ done
 #!/usr/bin/env bash
 
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment1/
 foldername=cost_grade/both_no_interaction/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -336,9 +340,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -361,17 +365,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -381,23 +385,24 @@ done
 ```{bash, data file gathering newt_change}
 #!/usr/bin/env bash
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment1/
 foldername=cost_grade/newt_change/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -405,9 +410,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -430,17 +435,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -450,23 +455,24 @@ done
 ```{bash, data file gathering snake_change}
 #!/usr/bin/env bash
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment1/
 foldername=cost_grade/snake_change/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -474,9 +480,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -499,17 +505,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -520,24 +526,25 @@ done
 ```{bash, data file gathering interaction gradient}
 #!/usr/bin/env bash
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment1/
 foldername=interaction_grade/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -545,9 +552,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -570,17 +577,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -592,24 +599,25 @@ done
 ```{bash, data file gathering mu_a}
 #!/usr/bin/env bash
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment2/
 foldername=mu_a/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -617,9 +625,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -642,17 +650,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -662,24 +670,25 @@ done
 ```{bash, data file gathering mu_b}
 #!/usr/bin/env bash
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment2/
 foldername=mu_b/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -687,9 +696,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -712,17 +721,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -733,24 +742,25 @@ done
 #!/usr/bin/env bash
 
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment2/
 foldername=mu_c/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -758,9 +768,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -783,17 +793,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -804,24 +814,25 @@ done
 #!/usr/bin/env bash
 
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment2/
 foldername=mu_d/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -829,9 +840,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -854,17 +865,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -877,24 +888,25 @@ done
 ```{bash, data file gathering v_a}
 #!/usr/bin/env bash
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment3/
 foldername=v_a/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -902,9 +914,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -927,17 +939,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -947,24 +959,25 @@ done
 ```{bash, data file gathering v_b}
 #!/usr/bin/env bash
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment3/
 foldername=v_b/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -972,9 +985,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -997,17 +1010,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -1017,24 +1030,25 @@ done
 ```{bash, data file gathering v_c}
 #!/usr/bin/env bash
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment3/
 foldername=v_c/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -1042,9 +1056,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -1067,17 +1081,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
@@ -1087,24 +1101,25 @@ done
 ```{bash, data file gathering v_d}
 #!/usr/bin/env bash
 
-# Requirements: need to have the same name and need to add additional columns
+# Requirements: need to have the same name and add additional columns
+dir=~/Desktop/Coevolution/
 thepath=Experiment3/
 foldername=v_d/csv
-thefolder=${thepath}${foldername}/*
+thefolder=${dir}${thepath}${foldername}/*
 
 add_in_column=",rep,snake_mu_rate,snake_mu_effect_sd,newt_mu_rate,newt_mu_effect_sd"
 
-cor_head_file=$(find ${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
+cor_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_cor_*" | head -n 1)
 cor_head=$(head -n 1 "${cor_head_file}")
 
-grid_head_file=$(find ${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
+grid_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_grid_*" | head -n 1)
 grid_head=$(head -n 1 "${grid_head_file}")
 
-lit_head_file=$(find ${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
+lit_head_file=$(find ${dir}${thepath}${foldername} -name "*_GA205_lit_*" | head -n 1)
 lit_head=$(head -n 1 "${lit_head_file}")
 
 
-if [[ -f ${thepath}${foldername}/all_lit.txt ]] && [[ -f ${thepath}${foldername}/all_grid.txt ]] && [[ -f ${thepath}${foldername}/all_cor.txt ]]
+if [[ -f ${dir}${thepath}${foldername}/all_lit.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_grid.txt ]] && [[ -f ${dir}${thepath}${foldername}/all_cor.txt ]]
 then
   echo "All cor, lit, and grid files exist!"
   echo "This program will now end!"
@@ -1112,9 +1127,9 @@ then
 fi
 
 #creating the files
-echo ${lit_head}${add_in_column} > ${thepath}${foldername}/all_lit.txt
-echo ${grid_head}${add_in_column} > ${thepath}${foldername}/all_grid.txt
-echo ${cor_head}${add_in_column} > ${thepath}${foldername}/all_cor.txt
+echo ${lit_head}${add_in_column} > ${dir}${thepath}${foldername}/all_lit.txt
+echo ${grid_head}${add_in_column} > ${dir}${thepath}${foldername}/all_grid.txt
+echo ${cor_head}${add_in_column} > ${dir}${thepath}${foldername}/all_cor.txt
 
 for filename in $thefolder*.text;
   do 
@@ -1137,17 +1152,17 @@ sed -i '' -e 's/$/,'${newt_mu_effect_sd}'/' $filename
 #infile >outfile
 if [[ $my_type == "lit" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_lit.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_lit.txt
 fi
 
 if [[ $my_type == "grid" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_grid.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_grid.txt
 fi
 
 if [[ $my_type == "cor" ]]
 then
-    tail -n +2 -q $filename >> ${thepath}${foldername}/all_cor.txt
+    tail -n +2 -q $filename >> ${dir}${thepath}${foldername}/all_cor.txt
 fi
 
 done
