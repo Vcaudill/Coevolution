@@ -1,0 +1,47 @@
+# both newt and snake are on a heterogeneous phenotype cost map
+
+"main_dr":
+  - "both"
+
+"n_mus":
+  - 1.0e-08
+  - 1.0e-09
+  - 1.0e-10
+  - 1.0e-11
+
+"s_mus":
+  - 1.0e-08
+  - 1.0e-09
+  - 1.0e-10
+  - 1.0e-11
+
+"n_es":
+  - 0.005
+  - 0.05
+  - 0.5
+  - 5.0
+
+"s_es":
+  - 0.005
+  - 0.05
+  - 0.5
+  - 5.0
+
+"sigma":
+  - 0.5
+
+"cost":
+  - 50
+  - 100
+  - 150
+  - 200
+  - 250
+
+"interaction_rate":
+  - 0.05
+
+"gen_end":
+  - 30000
+
+"grid_val":
+  - 5
