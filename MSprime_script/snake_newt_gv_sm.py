@@ -20,7 +20,7 @@ name_of_file = "both_newt_snake_annotated.init.trees"
 '''
 mytag="no_tag"
 snake_mu_rate = float(sys.argv[1])
-newt_mu_rate = float(sys.argv[2])  # does this need to be 50 times more than the snake?
+newt_mu_rate = float(sys.argv[2])  
 snake_mu_effect_sd = float(sys.argv[3])
 newt_mu_effect_sd = float(sys.argv[4])
 datadir = sys.argv[5]
@@ -214,7 +214,7 @@ for ind in both.individuals():
     assert set(node_ids) == set([2 * pid + k for k in range(2)])
 
 # population 0 = snakes = mutations of type 2
-# NOTE: this takes a bit, and we could only check the first 100 if we wanted
+# NOTE: this takes a bit
 for t in both.trees():
     for m in t.mutations():
         mut_type = m.metadata['mutation_list'][0]['mutation_type']
