@@ -4,23 +4,23 @@ initialize() {
 	initializeSLiMOptions(dimensionality="xy");
 	initializeTreeSeq();
 	//setSeed(seed);
-	sigma_i = 1; // area for individulas to mate with might condider one for each species (2)
+	sigma_i = 1; // area for individulas to mate with 
 	recomb=1e-8;
-	sigma_in = 0.5; // i want more of a decrease in fitness when there are too many neighbors!
+	sigma_in = 0.5; 
 	
 	//Testing factors 	
-//	defineConstant("mu_rate", 1e-8); //just be the snake mu
-//	defineConstant("snake_mu_rate", 1e-8); //snake mu/newt mu it will me more or less comman than nake	
-//	defineConstant("newt_mu_rate", 1e-8); //newt mu/ snake mu it will me more or less comman than nake
+//	defineConstant("mu_rate", 1e-8); 
+//	defineConstant("snake_mu_rate", 1e-8); //snake mu
+//	defineConstant("newt_mu_rate", 1e-8); //newt mu
 //	defineConstant("snake_mu_effect_sd", 0.5);
 //	defineConstant("newt_mu_effect_sd", 0.5);
 //	defineConstant("msprime_file", "test_data/test_1000_su_1e-10_nu_1e-10_sue_0.1_nue_0.1_.init.trees");
 //	defineConstant("grid_val", 5);
 //	defineConstant("outpath", "test_data/");
 //	defineConstant("seed", getSeed()); //"seed"
-//	defineConstant("NUMGENS", 100000); // how long to run for
-//	defineConstant("tag", "test"); // how long to run for
-//	defineConstant("interaction_rate", 0.05);  // how the interation curve is defined  
+//	defineConstant("NUMGENS", 100000); // generation end
+//	defineConstant("tag", "test"); // label
+//	defineConstant("interaction_rate", 0.05);   
 //	defineConstant("rep", "test"); // which repicate
 	
 	total_mut_rate = newt_mu_rate + snake_mu_rate;
@@ -31,15 +31,15 @@ initialize() {
 	defineConstant("SI", sigma_in);  // sigma_I, the spatial interaction distance
 	defineConstant("surs", sigma_in);  // surs, the surviver distance
 	defineConstant("SM", SI);  // sigma_M, the mate choice distance
-	defineConstant("L", 4);    // mean lifetime at stationarity (what id the life times are different for each species?)
+	defineConstant("L", 4);    // mean lifetime at stationarity 
 	defineConstant("W", 35.0);  // width of the simulated area
-	defineConstant("H", 4);  // multiplicative height of the simulated area need to also make sure it can be changed in snakemake
+	defineConstant("H", 4);  // multiplicative height of the simulated area 
 	defineConstant("G", 1e8);  // genome length
 	defineConstant("FECUN", 1/(L)); // mean fecundity
 	defineConstant("RHO", FECUN/((1+FECUN) * K)); // constant in spatial competition function
 	defineConstant("PE", 0.1); //Positive effect snake gets when eating a newt
-	defineConstant("w", 10); //the width of the logistic curve, change in phyenotype at any state
-	defineConstant("c", 0.0); // is the mean change 2w or 3w 2*w
+	defineConstant("w", 10); //the width of the logistic curve
+	defineConstant("c", 0.0); // is the mean change
 	defineConstant("setCOST", 100); //phenotype cost for newts and snakes
 	
 	
@@ -47,11 +47,11 @@ initialize() {
 	initializeMutationType("m2", 0.5, "n", 0, snake_mu_effect_sd);
 	initializeGenomicElementType("g1", c(m1, m2), c(newt_mu_rate, snake_mu_rate)); // mutation proportions add the proportion (the target mutation rate)
 	initializeGenomicElement(g1, 0, G-1);
-	initializeMutationRate(total_mut_rate); //times genome * G-1 p*mu (1e-10), when I made this too high slim crashed
+	initializeMutationRate(total_mut_rate); //times genome * G-1 p*mu (1e-10)
 	initializeRecombinationRate(recomb);
 	
-	// MAKE THE INTERACTIONS CONSISTENT
-	initializeInteractionType(1, "xy", reciprocal=T, maxDistance=SI * 3); //Distance
+	// newts
+	initializeInteractionType(1, "xy", reciprocal=T, maxDistance=SI * 3); 
 	i1.setInteractionFunction("n", 1.0/(2*PI*SI^2), SI);
 	
 	// snakes
@@ -60,59 +60,47 @@ initialize() {
 
 }
 
-// to make the mutions truly neutral, what is this doing?
 fitness(m1) { return 1.0; }
-fitness(m2) { return 1.0; }// when it is gone population size explodes
+fitness(m2) { return 1.0; }
 
 /// FUNCTIONS for log file
 
 function (float)summarize_ind_num(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//counting the number of individuals by the area they are in
+	//counting the number of individuals by  area
 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>0)length(individuals); else length(individuals); ", empty=0.0);
-	//catn(sanity+ "   " +index + "    " + sum_ind[index]);
-	//catn(cur_index);
 	return sum_ind[index];
 }
 
 function (float)summarize_mean_pheno(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//counting the number of individuals by the area they are in
+	//mean phenotype by area 
 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>0)mean(individuals.getValue('pheno')); else length(individuals); ", empty=NAN);
-	//catn(sanity+ "   " +index + "    " + sum_ind[index]);
-	//catn(cur_index);
 	return sum_ind[index];
 }
 
 function (float)summarize_sd_pheno(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//counting the number of individuals by the area they are in
+	//sd phenotype by area 
 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>1)sd(individuals.getValue('pheno')); else NAN; ", empty=NAN);
-	//catn(sanity+ "   " +index + "    " + sum_ind[index]);
-	//catn(cur_index);
 	return sum_ind[index];
 }
 
 function (float)summarize_max_pheno(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//counting the number of individuals by the area they are in
-	grid_res= c(grid_res_value*H,grid_res_value);
+	//max phenotype by area 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>0)max(individuals.getValue('pheno')); else length(individuals); ", empty=NAN);
-	//catn(sanity+ "   " +index + "    " + sum_ind[index]);
-	//catn(cur_index);
 	return sum_ind[index];
 }
 
 function (float)summarize_min_pheno(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//counting the number of individuals by the area they are in
+	//min phenotype by area 
 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>0)min(individuals.getValue('pheno')); else length(individuals); ", empty=NAN);
-	//catn(sanity+ "   " +index + "    " + sum_ind[index]);
-	//catn(cur_index);
 	return sum_ind[index];
 }
 
@@ -156,18 +144,14 @@ reproduction(p0) {//snakes
 
 1 early() {
 	sim.rescheduleScriptBlock(s99, generations=NUMGENS);
-	
-	//		I will need to use the coalescent simulations for newts and snakes
-	//		Then give the "neutral" mutations a selection coefficent
-	//		I will also add demographic location
+
 	sim.readFromPopulationFile(msprime_file);
-	// sometimes there is a problem with this line and I need to change my directory
 	//sim.treeSeqRememberIndividuals(p0.individuals);
 	//sim.treeSeqRememberIndividuals(p1.individuals);
 	
 	p1.setSpatialBounds(c(0, 0, W, W*H)); //newt
 	p0.setSpatialBounds(c(0, 0, W, W*H)); //snake
-	//	// would it be better to add them on the same plot
+
 	//	// random initial positions
 	for (ind in p1.individuals) { //newt
 		ind.setSpatialPosition(p1.pointUniform());
@@ -209,28 +193,22 @@ early() {
 	
 	
 	// avoid edge effects
-	inds_n.fitnessScaling = inds_n.fitnessScaling * pmin(sqrt(inds_n.x/SI), 1.0) * pmin(sqrt(inds_n.y/SI), 1.0) * pmin(sqrt((W - inds_n.x)/SI), 1.0) * pmin(sqrt((W*H - inds_n.y)/SI), 1.0); // * effects
+	inds_n.fitnessScaling = inds_n.fitnessScaling * pmin(sqrt(inds_n.x/SI), 1.0) * pmin(sqrt(inds_n.y/SI), 1.0) * pmin(sqrt((W - inds_n.x)/SI), 1.0) * pmin(sqrt((W*H - inds_n.y)/SI), 1.0); 
 	inds_s.fitnessScaling = inds_s.fitnessScaling * pmin(sqrt(inds_s.x/SI), 1.0) * pmin(sqrt(inds_s.y/SI), 1.0) * pmin(sqrt((W - inds_s.x)/SI), 1.0) * pmin(sqrt((W*H - inds_s.y)/SI), 1.0);
 	
 	
 	//Snake and Newt 1on1 interaction
 	bounds = p0.spatialBounds;
 	
-	
-	// find number of newts near each snake and choose a random newt from nearby for a potental interaction
-	// uniform dist based on the distance (how close they are) if they are going to interact, stepping through each of the newtneighbor and picking which one to eat. p could be 0.1 like 10% chance of snake running into newt 
-	
+	// find number of newts near each snake and choose a random newt from nearby for a potental interaction 
 	//How many individual newts and snakes are interacting each year
 	snake_found_newt = 0;
 	newt_found = 0;
 	snake_deaths = 0;
 	newt_deaths = 0;
 	for (ind_snake in p0.individuals){
-		// does a snake meet a newt? 
-		
 		mPoint = c(ind_snake.x,ind_snake.y);
-		newtNeighbors = i1.nearestNeighborsOfPoint(p1, mPoint, count=1000000);// could make count smaller (limit the number of newts nearby)
-		//catn(length(newtNeighbors)); // figuring out the amount of newt neghbors for each snake
+		newtNeighbors = i1.nearestNeighborsOfPoint(p1, mPoint, count=1000000);
 		// sample number based on a combination of how close they are using a uniform distibution 
 		if (length(newtNeighbors) > 0){ //need newt to be nearby to eat
 			snake_found_newt = snake_found_newt + 1;
@@ -240,25 +218,17 @@ early() {
 			
 			newt_meet_snake = newtNeighbors[runif(length(newtNeighbors)) < probablity] ; //list of newts snake will try to eat
 			
-			
 			// then go one newt at a time and see the outcome of the interaction which is dependent on phenotypes (check to make sure newt is still alive)
 			for(ind_newt in newt_meet_snake){
 				
 				//check to see if newt is alive, newt is not eaten by more than one snake 
 				if(ind_newt.fitnessScaling > 0){
 					newt_found = newt_found + 1;
-					//Could the snake eat the newt?
 					compair_pheno = inds_s.getValue('pheno')[ind_snake.index] - inds_n.getValue('pheno')[ind_newt.index]; // compairing the snake phentype to the newt phenotype
-					
-					//Did the snake eat the newt?
-					//potential outcomes are death for newt or snake, how do we make the survival curve? 
+
 					prob_of_survive = 1.0/(1+exp(-((compair_pheno-c)/w)));// snakes probablity of survival 
-					//runif(1); //testing to see if there are strong cor due to drift
-					//1.0/(1+exp(-((compair_pheno-c)/w)));// snakes probablity of survival 
-					//catn(prob_of_survive);
-					survive = runif(1) < prob_of_survive; //did the snake survive? //one will die for sure 
-					
-					//Future more selections where there is a chance that both survive or die???
+					survive = runif(1) < prob_of_survive; //did the snake survive? 
+
 					if(survive==T){
 						ind_snake.fitnessScaling = ind_snake.fitnessScaling + PE; //snake with eating newt bonus
 						// counting the amount of newts a snake has killed						
@@ -278,9 +248,7 @@ early() {
 				
 				}
 			}
-			
-			
-			//What is this doing?
+						
 			outcome_n = rep(1.0, p1.individualCount);
 			outcome_s = rep(1.0, p0.individualCount);
 		
@@ -319,9 +287,9 @@ early() {
 	newt_sum_ind=summarizeIndividuals(p1.individuals, grid_res, p0.spatialBounds, operation="if (length(individuals)>0)length(individuals); else length(individuals); ", empty=0.0, perUnitArea=T);
 
 	//correlations 	
-	newt_mean_pheno=newt_mean_pheno[]; //to make a vector
+	newt_mean_pheno=newt_mean_pheno[]; 
 	snake_mean_pheno=snake_mean_pheno[];
-	u=isFinite(newt_mean_pheno)&isFinite(snake_mean_pheno); // so both are true
+	u=isFinite(newt_mean_pheno)&isFinite(snake_mean_pheno); 
 	mean_newt_pheno_By_mean_snake_pheno = cor(c(newt_mean_pheno[u]), c(snake_mean_pheno[u]));
 	num_newts_By_num_snakes = cor(c(newt_sum_ind), c(snake_sum_ind));
 	sum_newt_pheno_By_num_snake = cor(c(newt_sum_pheno), c(snake_sum_ind)); //
@@ -338,7 +306,7 @@ early() {
 
 }
 
-//files I want to make
+//files to make
 1 early() {
 	// Log Files
 	//log_S.addCustomColumn("",";"); //how to add a log column
@@ -430,6 +398,5 @@ log_c.addCustomColumn("sum_snake_pheno_By_snake_newt","sum_snake_pheno_By_snake_
 s99 10 late() {
 	// outpath will need to be defined in the slim call so will the varables and ending time
 	sim.treeSeqOutput(treename+tag+"_slim_trees_snake_mu_rate_"+snake_mu_rate+ "_newt_mu_rate_"+newt_mu_rate + "_snake_mu_effect_sd_"+ snake_mu_effect_sd +"_newt_mu_effect_sd_" +newt_mu_effect_sd+"_sigma_"+SD+ "_rep_"+rep + "_late_" + NUMGENS  + "_ID_" + seed + ".trees");
-	//catn("Done!");
 	sim.simulationFinished();
 }
