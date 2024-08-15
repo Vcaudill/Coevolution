@@ -40,7 +40,7 @@ out = []
 #'{:.1e}'.format(1e-22)
 ## These are the output files that will be made
 
-#nested for loop throught the paramiters need to rotate thought the replicas first to keep the seeds the same 
+#nested for loop through the parameters need to rotate thought the replicas first to keep the seeds the same 
 for k in range(replics):
     for i in range(len(config["s_mus"])):
         for j in range(len(config["n_mus"])):
