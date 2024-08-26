@@ -3,25 +3,25 @@ initialize() {
 	initializeSLiMModelType("nonWF");
 	initializeSLiMOptions(dimensionality="xy");
 	initializeTreeSeq();
-	//setSeed(seed);
-	sigma_i = 1; // area for individulas to mate 
-	recomb=1e-8;
+	// setSeed(seed);
+	sigma_i = 1;
+	recomb = 1e-8;
 	sigma_in = 0.5; 
 	
-	//Testing factors 	
-//	defineConstant("mu_rate", 1e-8);
-//	defineConstant("snake_mu_rate", 1e-8); //snake mutation
-//	defineConstant("newt_mu_rate", 1e-8); //newt mutation
-//	defineConstant("snake_mu_effect_sd", 0.5);
-//	defineConstant("newt_mu_effect_sd", 0.5);
-//	defineConstant("msprime_file", "test_data/test_1000_su_1e-10_nu_1e-10_sue_0.1_nue_0.1_.init.trees");
-//	defineConstant("grid_val", 5);
-//	defineConstant("outpath", "test_data/");
-//	defineConstant("seed", getSeed()); //"seed"
-//	defineConstant("NUMGENS", 100000); // endidng generation
-//	defineConstant("tag", "test"); // label
-//	defineConstant("interaction_rate", 0.05);  
-//	defineConstant("rep", "test"); // which repicate
+	// Testing factors 	
+// 	defineConstant("mu_rate", 1e-8); 
+// 	defineConstant("snake_mu_rate", 1e-8); // snake mu	
+// 	defineConstant("newt_mu_rate", 1e-8); // newt mu
+// 	defineConstant("snake_mu_effect_sd", 0.5);
+// 	defineConstant("newt_mu_effect_sd", 0.5);
+// 	defineConstant("msprime_file", "test_data/test_1000_su_1e-10_nu_1e-10_sue_0.1_nue_0.1_.init.trees");
+// 	defineConstant("grid_val", 5);
+// 	defineConstant("outpath", "test_data/");
+// 	defineConstant("seed", getSeed()); // "seed"
+// 	defineConstant("NUMGENS", 100000); // end generation
+// 	defineConstant("tag", "test"); // label
+// 	defineConstant("rep", "test"); // which repicate
+// 	defineConstant("interaction_rate", 0.05);  
 	
 	total_mut_rate = newt_mu_rate + snake_mu_rate;
 	
@@ -33,19 +33,19 @@ initialize() {
 	defineConstant("SM", SI);  // sigma_M, the mate choice distance
 	defineConstant("L", 4);    // mean lifetime at stationarity 
 	defineConstant("W", 35.0);  // width of the simulated area
-	defineConstant("H", 4);  // multiplicative height of the simulated area
+	defineConstant("H", 4);  // height of the simulated area 
 	defineConstant("G", 1e8);  // genome length
 	defineConstant("FECUN", 1/(L)); // mean fecundity
 	defineConstant("RHO", FECUN/((1+FECUN) * K)); // constant in spatial competition function
-	defineConstant("PE", 0.1); //Positive effect snake gets when eating a newt
-	defineConstant("w", 10); //the width of the logistic curve, change in phyenotype at any state
+	defineConstant("PE", 0.1); // Positive effect snake gets when eating a newt
+	defineConstant("w", 10); // the width of the logistic curve, change in phyenotype at any state
 	defineConstant("c", 0.0); // is the mean change 
-	defineConstant("setCOST", 100); //phenotype cost for newts and snakes
+	defineConstant("setCOST", 100); // phenotype cost for newts and snakes
 	
 	
 	initializeMutationType("m1", 0.5, "n", 0, newt_mu_effect_sd);
 	initializeMutationType("m2", 0.5, "n", 0, snake_mu_effect_sd);
-	initializeGenomicElementType("g1", c(m1, m2), c(newt_mu_rate, snake_mu_rate)); // mutation proportions add the proportion (the target mutation rate)
+	initializeGenomicElementType("g1", c(m1, m2), c(newt_mu_rate, snake_mu_rate)); // mutation proportions 
 	initializeGenomicElement(g1, 0, G-1);
 	initializeMutationRate(total_mut_rate);
 	initializeRecombinationRate(recomb);
@@ -60,15 +60,14 @@ initialize() {
 
 }
 
-
 fitness(m1) { return 1.0; }
 fitness(m2) { return 1.0; }
 
-/// FUNCTIONS for log file
+// / FUNCTIONS for log file
 
 function (float)summarize_ind_num(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//counting the number of individuals by the area they are in
+	// counting the number of individuals by area
 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>0)length(individuals); else length(individuals); ", empty=0.0);
 	return sum_ind[index];
@@ -76,7 +75,7 @@ function (float)summarize_ind_num(o<Subpopulation>$ subpop, i$ grid_res_value, i
 
 function (float)summarize_mean_pheno(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//mean phenotype by area
+	// mean phenotype by area
 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>0)mean(individuals.getValue('pheno')); else length(individuals); ", empty=NAN);
 	return sum_ind[index];
@@ -84,7 +83,7 @@ function (float)summarize_mean_pheno(o<Subpopulation>$ subpop, i$ grid_res_value
 
 function (float)summarize_sd_pheno(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//sd phenotype by area
+	// sd phenotype by area
 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>1)sd(individuals.getValue('pheno')); else NAN; ", empty=NAN);
 	return sum_ind[index];
@@ -92,7 +91,7 @@ function (float)summarize_sd_pheno(o<Subpopulation>$ subpop, i$ grid_res_value, 
 
 function (float)summarize_max_pheno(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//max phenotype by area
+	// max phenotype by area
 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>0)max(individuals.getValue('pheno')); else length(individuals); ", empty=NAN);
 	return sum_ind[index];
@@ -100,19 +99,19 @@ function (float)summarize_max_pheno(o<Subpopulation>$ subpop, i$ grid_res_value,
 
 function (float)summarize_min_pheno(o<Subpopulation>$ subpop, i$ grid_res_value, i$ index, s$ sanity)
 {
-	//min phenotype by area
+	// min phenotype by area
 	grid_res= c(grid_res_value*H,grid_res_value);
 	sum_ind=summarizeIndividuals(subpop.individuals, grid_res, subpop.spatialBounds, operation="if (length(individuals)>0)min(individuals.getValue('pheno')); else length(individuals); ", empty=NAN);
 	return sum_ind[index];
 }
 
-reproduction(p1) {//newts
+reproduction(p1) {// newts
 	// choose our nearest neighbor as a mate, within the max distance 
 	mate = i2.drawByStrength(individual, 1);
 	if (mate.size()) {
 		nOff = rpois(1, FECUN);
 		for (i in seqLen(nOff)) {
-			pos = individual.spatialPosition + rnorm(2, 0, SD); // adds dispersal
+			pos = individual.spatialPosition + rnorm(2, 0, SD); // dispersal
 			if (p1.pointInBounds(pos)) {
 				offspring = subpop.addCrossed(individual, mate);
 				offspring.setSpatialPosition(p1.pointReflected(pos));
@@ -124,13 +123,13 @@ reproduction(p1) {//newts
 	return;
 }
 
-reproduction(p0) {//snakes
+reproduction(p0) {// snakes
 	// choose our nearest neighbor as a mate, within the max distance
 	mate = i2.drawByStrength(individual, 1);
 	if (mate.size()) {
 		nOff = rpois(1, FECUN);
 		for (i in seqLen(nOff)) {
-			pos = individual.spatialPosition + rnorm(2, 0, SD); // adds dispersal
+			pos = individual.spatialPosition + rnorm(2, 0, SD); // dispersal
 			if (p0.pointInBounds(pos)) {
 				offspring = subpop.addCrossed(individual, mate);
 				offspring.setSpatialPosition(p0.pointReflected(pos));
@@ -142,32 +141,28 @@ reproduction(p0) {//snakes
 	return;
 }
 
-// "p2" were repaced with "p0" both are for snakes
-
 1 early() {
 	sim.rescheduleScriptBlock(s99, generations=NUMGENS);
 	sim.readFromPopulationFile(msprime_file);
-	//sim.treeSeqRememberIndividuals(p0.individuals);
-	//sim.treeSeqRememberIndividuals(p1.individuals);
 	
-	p1.setSpatialBounds(c(0, 0, W, W*H)); //newt
-	p0.setSpatialBounds(c(0, 0, W, W*H)); //snake
-
-	for (ind in p1.individuals) { //newt
+	p1.setSpatialBounds(c(0, 0, W, W*H)); // newt
+	p0.setSpatialBounds(c(0, 0, W, W*H)); // snake
+	// random initial positions
+	for (ind in p1.individuals) { // newt
 		ind.setSpatialPosition(p1.pointUniform());
 		ind.setValue("snakes_killed",0);
 		ind.setValue("pheno",exp(ind.sumOfMutationsOfType(m1)/10)); 
 	}
-	for (ind in p0.individuals) { //snake
+	for (ind in p0.individuals) { // snake
 		ind.setSpatialPosition(p0.pointUniform());
 		ind.setValue("newts_killed",0);
-		ind.setValue("pheno",exp(ind.sumOfMutationsOfType(m2)/10));
+		ind.setValue("pheno",exp(ind.sumOfMutationsOfType(m2)/10)); 
 	
 	}
 	i1.evaluate();
 }
 
-//competition within and between populations
+// competition within and between populations
 early() {
 
 	i1.evaluate(p1);
@@ -179,8 +174,8 @@ early() {
 	snake_competition = i2.totalOfNeighborStrengths(inds_s);// find number of snake neighbors for each snake
 	
 	// construct phenotypes and fitness effects from QTLs 
-	inds_n.z = inds_n.getValue('pheno');//phenotypes_n
-	inds_s.z = inds_s.getValue('pheno'); //phenotypes_s
+	inds_n.z = inds_n.getValue('pheno');// phenotypes_n
+	inds_s.z = inds_s.getValue('pheno'); // phenotypes_s
 	
 	cost_n = exp(-(inds_n.getValue('pheno')/setCOST)^2);
 	cost_s = exp(-(inds_s.getValue('pheno')/setCOST)^2);
@@ -194,7 +189,6 @@ early() {
 
 	bounds = p0.spatialBounds;
 	// find number of newts near each snake and choose a random newt from nearby for a potental interaction
-	//How many individual newts and snakes are interacting each year
 	snake_found_newt = 0;
 	newt_found = 0;
 	snake_deaths = 0;
@@ -206,42 +200,41 @@ early() {
 			snake_found_newt = snake_found_newt + 1;
 			// List of which newts the snake will try to eat. It will take a uniform distribution and a probablity of interacting
 			distance = i1.distanceToPoint(newtNeighbors, mPoint);// vector of distances 
-			probablity = interaction_rate*exp(-(distance^2)/(2*(surs^2))); //curve of the interaction based on the distance of the newt
+			probablity = interaction_rate*exp(-(distance^2)/(2*(surs^2))); // curve of the interaction based on the distance of the newt
 			
-			newt_meet_snake = newtNeighbors[runif(length(newtNeighbors)) < probablity] ; //list of newts snake will try to eat
+			newt_meet_snake = newtNeighbors[runif(length(newtNeighbors)) < probablity] ; // list of newts snake will try to eat
 			// loop through one newt at a time and see the outcome of the interaction which is dependent on phenotypes (check to make sure newt is still alive)
 			for(ind_newt in newt_meet_snake){
-				//check to see if newt is alive, newt is not eaten by more than one snake 
+				// check to see if newt is alive, newt is not eaten by more than one snake 
 				if(ind_newt.fitnessScaling > 0){
 					newt_found = newt_found + 1;
 					compair_pheno = inds_s.getValue('pheno')[ind_snake.index] - inds_n.getValue('pheno')[ind_newt.index]; // compairing the snake phentype to the newt phenotype 
-					prob_of_survive = runif(1); //making the outcome of the interaction random
-					survive = runif(1) < prob_of_survive; //did the snake survive? 					
+					prob_of_survive = runif(1); // making the outcome of the interaction random
+					survive = runif(1) < prob_of_survive; // did the snake survive? 					
 					if(survive==T){
-						ind_snake.fitnessScaling = ind_snake.fitnessScaling + PE; //snake with eating newt bonus
+						ind_snake.fitnessScaling = ind_snake.fitnessScaling + PE; // snake with eating newt bonus
 						// counting the amount of newts a snake has killed						
 						ind_snake.setValue("newts_killed",(ind_snake.getValue("newts_killed")+1));
-						ind_newt.fitnessScaling = 0; //newt
+						ind_newt.fitnessScaling = 0; // newt
 						newt_deaths = newt_deaths + 1;
 					
 					}
 					if(survive==F){
-						ind_snake.fitnessScaling = 0; //snake 
+						ind_snake.fitnessScaling = 0; // snake 
 						// counting the amount of snakes a newt has killed
 						ind_newt.setValue("snakes_killed",(ind_newt.getValue("snakes_killed")+1));
 						snake_deaths = snake_deaths +1;
-						break; //break if snake dies
+						break; // break if snake dies
 					}
 				
 				}
 			}
-						
+			
 			outcome_n = rep(1.0, p1.individualCount);
 			outcome_s = rep(1.0, p0.individualCount);
 		
 		}
 	}
-	//Global Varables to look at			
 	defineGlobal("snake_found_newt", snake_found_newt);
 	defineGlobal("newt_found", newt_found);
 	defineGlobal("snake_deaths", snake_deaths);
@@ -253,7 +246,7 @@ early() {
 	i2.evaluate(p1);
 	i2.evaluate(p0);
 }
-//COR calc
+// COR calc
 2: early() {
 	inds_n = p1.individuals;
 	inds_s = p0.individuals;
@@ -261,16 +254,16 @@ early() {
 
 	snake_sum_pheno=summarizeIndividuals(p0.individuals, grid_res, p0.spatialBounds, operation="if (length(individuals)>0)sum(individuals.getValue('pheno')); else length(individuals); ", empty=NAN, perUnitArea=T);
 	snake_mean_pheno=summarizeIndividuals(p0.individuals, grid_res, p0.spatialBounds, operation="if (length(individuals)>0)mean(individuals.getValue('pheno')); else length(individuals); ", empty=NAN, perUnitArea=F);
-	snake_sum_ind=summarizeIndividuals(p0.individuals, grid_res, p0.spatialBounds, operation="if (length(individuals)>0)length(individuals); else length(individuals); ", empty=0.0, perUnitArea=T);
+	snake_sum_ind=summarizeIndividuals(p0.individuals, grid_res, p0.spatialBounds, operation="if (length(individuals)>0)length(individuals); else length(individuals); ", empty=0.0, perUnitArea=F);
 
 	
-	//newt
+	// newt
 	
 	newt_sum_pheno=summarizeIndividuals(p1.individuals, grid_res, p0.spatialBounds, operation="if (length(individuals)>0)sum(individuals.getValue('pheno')); else length(individuals); ", empty=NAN, perUnitArea=T);
 	newt_mean_pheno=summarizeIndividuals(p1.individuals, grid_res, p0.spatialBounds, operation="if (length(individuals)>0)mean(individuals.getValue('pheno')); else length(individuals); ", empty=NAN, perUnitArea=F);
-	newt_sum_ind=summarizeIndividuals(p1.individuals, grid_res, p0.spatialBounds, operation="if (length(individuals)>0)length(individuals); else length(individuals); ", empty=0.0, perUnitArea=T);
+	newt_sum_ind=summarizeIndividuals(p1.individuals, grid_res, p0.spatialBounds, operation="if (length(individuals)>0)length(individuals); else length(individuals); ", empty=0.0, perUnitArea=F);
 
-	//correlations 	
+	// correlations 	
 	newt_mean_pheno=newt_mean_pheno[]; 
 	snake_mean_pheno=snake_mean_pheno[];
 	u=isFinite(newt_mean_pheno)&isFinite(snake_mean_pheno); 
@@ -290,7 +283,6 @@ early() {
 
 }
 
-//files to be make
 1 early() {
 	// Log Files
 	grid_val_2=grid_val*H;
@@ -303,7 +295,7 @@ early() {
 	defineGlobal("beta_s", beta_s);
 	
 	// text file
-	mytextfile=outpath+tag+"_GA"+grid_val_2+grid_val+"_lit_"+"snake_mu_rate_"+snake_mu_rate+ "_newt_mu_rate_"+newt_mu_rate + "_snake_mu_effect_sd_"+ snake_mu_effect_sd +"_newt_mu_effect_sd_" +newt_mu_effect_sd+"_sigma_"+SD+ "_ID_"+seed + "_interaction_rate_" + interaction_rate + "_cost_" + setCOST + "_rep_"+rep + "_late_" + NUMGENS + "_.text"; //file name
+	mytextfile=outpath+tag+"_GA"+grid_val_2+grid_val+"_lit_"+"snake_mu_rate_"+snake_mu_rate+ "_newt_mu_rate_"+newt_mu_rate + "_snake_mu_effect_sd_"+ snake_mu_effect_sd +"_newt_mu_effect_sd_" +newt_mu_effect_sd+"_sigma_"+SD+ "_ID_"+seed + "_interaction_rate_" + interaction_rate + "_cost_" + setCOST + "_rep_"+rep + "_late_" + NUMGENS + "_.text"; // file name
 
 	log_t = sim.createLogFile(mytextfile, logInterval=20);
 	log_t.addGeneration();	
@@ -334,36 +326,35 @@ early() {
 	log_t.addCustomColumn("time","clock();");
 	
 		
-	//grid space file
-	mygridfile=outpath+tag+"_GA"+grid_val_2+grid_val+"_grid_"+"snake_mu_rate_"+snake_mu_rate+ "_newt_mu_rate_"+newt_mu_rate + "_snake_mu_effect_sd_"+ snake_mu_effect_sd +"_newt_mu_effect_sd_" +newt_mu_effect_sd+"_sigma_"+SD+ "_ID_"+seed + "_cost_" + setCOST + "_interaction_rate_" + interaction_rate + "_rep_"+rep + "_late_" + NUMGENS + "_.text"; //file name
+	// grid space file
+	mygridfile=outpath+tag+"_GA"+grid_val_2+grid_val+"_grid_"+"snake_mu_rate_"+snake_mu_rate+ "_newt_mu_rate_"+newt_mu_rate + "_snake_mu_effect_sd_"+ snake_mu_effect_sd +"_newt_mu_effect_sd_" +newt_mu_effect_sd+"_sigma_"+SD+ "_ID_"+seed + "_cost_" + setCOST + "_interaction_rate_" + interaction_rate + "_rep_"+rep + "_late_" + NUMGENS + "_.text"; // file name
 
 	log = sim.createLogFile(mygridfile, logInterval=20);
 	log.addGeneration();
-	//loop for the different spaces in the grid 
+	// loop for the different spaces in the grid 
 	for (element in 0:(grid_val*grid_val_2-1)){
-		//summarize_ind_num
+		// summarize_ind_num
 		log.addCustomColumn(paste0("newt_num_ind_", element), paste0("summarize_ind_num(p1, grid_res_value=grid_val, index=", element, ", sanity='Newt num ind');"));
 		log.addCustomColumn(paste0("snake_num_ind_", element), paste0("summarize_ind_num(p0, grid_res_value=grid_val, index=", element, ", sanity='Snake num ind');"));
-		//summarize_max_pheno
+		// summarize_max_pheno
 		log.addCustomColumn(paste0("newt_max_pheno_", element), paste0("summarize_max_pheno(p1, grid_res_value=grid_val, index=", element, ", sanity='Newt max pheno');"));
 		log.addCustomColumn(paste0("snake_max_pheno_", element), paste0("summarize_max_pheno(p0, grid_res_value=grid_val, index=", element, ", sanity='Snake max pheno');"));		
-		//summarize_mean_pheno
+		// summarize_mean_pheno
 		log.addCustomColumn(paste0("newt_mean_pheno_", element), paste0("summarize_mean_pheno(p1, grid_res_value=grid_val, index=", element, ", sanity='Newt mean pheno');"));
 		log.addCustomColumn(paste0("snake_mean_pheno_", element), paste0("summarize_mean_pheno(p0, grid_res_value=grid_val, index=", element, ", sanity='Snake mean pheno');"));	
-		//summarize_sd_pheno
+		// summarize_sd_pheno
 				log.addCustomColumn(paste0("newt_sd_pheno_", element), paste0("summarize_sd_pheno(p1, grid_res_value=grid_val, index=", element, ", sanity='Newt sd pheno');"));
 		log.addCustomColumn(paste0("snake_sd_pheno_", element), paste0("summarize_sd_pheno(p0, grid_res_value=grid_val, index=", element, ", sanity='Snake sd pheno');"));	
-		//summarize_min_pheno
+		// summarize_min_pheno
 		log.addCustomColumn(paste0("newt_min_pheno_", element), paste0("summarize_min_pheno(p1, grid_res_value=grid_val, index=", element, ", sanity='Newt min pheno');"));
 		log.addCustomColumn(paste0("snake_min_pheno_", element), paste0("summarize_min_pheno(p0, grid_res_value=grid_val, index=", element, ", sanity='Snake min pheno');"));	
 	}
 }
 
-
 2 early(){
 
-		//Cor Log file
-mycorfile=outpath+tag+"_GA"+grid_val_2+grid_val+"_cor_"+"snake_mu_rate_"+snake_mu_rate+ "_newt_mu_rate_"+newt_mu_rate + "_snake_mu_effect_sd_"+ snake_mu_effect_sd +"_newt_mu_effect_sd_" +newt_mu_effect_sd+"_sigma_"+SD+ "_ID_"+seed + "_cost_" + setCOST + "_interaction_rate_" + interaction_rate + "_rep_"+rep + "_late_" + NUMGENS + "_.text"; //file name
+		// Cor Log file
+mycorfile=outpath+tag+"_GA"+grid_val_2+grid_val+"_cor_"+"snake_mu_rate_"+snake_mu_rate+ "_newt_mu_rate_"+newt_mu_rate + "_snake_mu_effect_sd_"+ snake_mu_effect_sd +"_newt_mu_effect_sd_" +newt_mu_effect_sd+"_sigma_"+SD+ "_ID_"+seed + "_cost_" + setCOST + "_interaction_rate_" + interaction_rate + "_rep_"+rep + "_late_" + NUMGENS + "_.text"; // file name
 	
 		log_c = sim.createLogFile(mycorfile, logInterval=20);
 		log_c.addGeneration();
